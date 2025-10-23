@@ -1,6 +1,7 @@
 package engine;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.Set;
@@ -12,28 +13,25 @@ import java.util.stream.Stream;
  */
 public class FileSystemScanner {
 
-    public void readPath(){
-        System.out.print("Proszę podać nazwę partycji lub ścieżkę do wybranego katalogu: ");
-        Scanner sc = new Scanner(System.in);
-        String name = sc.nextLine();
-        File f = new File(name);
+    /**
+     * Metoda zwracająca wszystkie absolutne ścieżki do plików .txt z wybranego katalogu
+     * @param path ścieżka do wybranego katalogu
+     * @return pusty Set lub zawierający absolutne ścieżki do plików, o ile jakieś znajdowały się w katalogu
+     * @throws FileNotFoundException rzucany jest, gdy wprowadzona ścieżka do katalogu jest błędna
+     */
+    public static Set<String> getAllFilesFromPath(String path) throws FileNotFoundException {
+        File f = new File(path);
         if(!f.exists()){
-            System.out.println("Plik lub katalog o podanej nazwie nie istnieje!");
-            return;
+            throw new FileNotFoundException("Plik lub katalog o podanej nazwie nie istnieje!");
         }
         if(!f.isDirectory()){
-            System.out.println("Nie znaleziono katalogu o podanej nazwie!");
-            return;
+            throw new FileNotFoundException("Nie znaleziono katalogu o podanej nazwie!");
         }
-        System.out.println("OK");
-        Set<String> files = Stream.of(Objects.requireNonNull(f.listFiles()))
-                .filter(file -> !file.isDirectory() &&
-                        file.getName().endsWith(".pdf"))
-                .map(File::getName)
-                .collect(Collectors.toSet());
 
-        for(String fileName : files){
-            System.out.println(fileName);
-        }
+        return Stream.of(Objects.requireNonNull(f.listFiles()))
+                .filter(file -> !file.isDirectory() &&
+                        file.getName().endsWith(".txt"))
+                .map(File::getAbsolutePath)
+                .collect(Collectors.toSet());
     }
 }

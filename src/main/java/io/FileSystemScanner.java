@@ -1,9 +1,8 @@
-package engine;
+package io;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Objects;
-import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
